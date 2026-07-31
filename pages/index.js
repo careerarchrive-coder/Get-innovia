@@ -13,6 +13,11 @@ export default function Home({ jobs, error }) {
           return Array.from(set).sort();
   }, [jobs]);
 
+        const locations = useMemo(() => {
+                  const set = new Set(jobs.map((job) => job.location).filter(Boolean));
+                  return Array.from(set).sort();
+        }, [jobs]);
+
   const jobTypes = useMemo(() => {
           const set = new Set(jobs.map((job) => job.employmentType).filter(Boolean));
           return Array.from(set).sort();
@@ -20,14 +25,13 @@ export default function Home({ jobs, error }) {
 
   const filteredJobs = useMemo(() => {
           const kw = keyword.trim().toLowerCase();
-          const loc = location.trim().toLowerCase();
-          return jobs.filter((job) => {
+                    return jobs.filter((job) => {
                     const matchesKeyword =
                                 !kw ||
                                 job.title?.toLowerCase().includes(kw) ||
                                 job.company?.toLowerCase().includes(kw) ||
                                 job.description?.toLowerCase().includes(kw);
-                    const matchesLocation = !loc || job.location?.toLowerCase().includes(loc);
+                    const matchesLocation = !location || job.location === location;
                     const matchesClassification = !classification || job.classification === classification;
                     const matchesJobType = !jobType || job.employmentType === jobType;
                     return matchesKeyword && matchesLocation && matchesClassification && matchesJobType;
@@ -68,12 +72,12 @@ export default function Home({ jobs, error }) {
                   onChange={(e) => setKeyword(e.target.value)}
                 />
                                   <div className="filter-row">
-                                    <input
-                    type="text"
-                    placeholder="Location (city, state, country)"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
+                                    <select value={location} onChange={(e) => setLocation(e.target.value)}>
+        <option value="">All Locations</option>
+{locations.map((loc) => (
+          <option key={loc} value={loc}>{loc}</option>
+        ))}
+</select>
                                       <select value={classification} onChange={(e) => setClassification(e.target.value)}>
                 <option value="">All Categories</option>
 {classifications.map((c) => (
