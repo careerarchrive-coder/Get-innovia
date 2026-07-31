@@ -111,9 +111,15 @@ color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem;
 }
 
 export async function getStaticPaths() {
-  return { paths: [], fallback: 'blocking' };
+  try {
+    const jobs = await fetchJobs();
+    const paths = jobs.map((j) => ({ params: { id: j.id } }));
+    return { paths, fallback: 'blocking' };
+  } catch (err) {
+    return { paths: [], fallback: 'blocking' };
+  }
 }
-
+  
 export async function getStaticProps({ params }) {
   try {
     const jobs = await fetchJobs();
