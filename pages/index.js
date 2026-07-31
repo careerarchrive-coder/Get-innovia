@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import Head from 'next/head';
-import fetchJobs from '../lib/fetchJobs';
+import { fetchJobs } from '../lib/fetchJobs';
 
 export default function Home({ jobs, error }) {
       const [keyword, setKeyword] = useState('');
